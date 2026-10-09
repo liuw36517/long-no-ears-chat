@@ -195,28 +195,71 @@
   };
 
   const handleAuth = async (event) => {
-    event.preventDefault();
-    if (!state.client) return;
-    const email = els.email.value.trim();
-    const password = els.password.value;
-    const username = els.displayName.value.trim();
-    els.authSubmit.disabled = true;
-    setMessage(els.authMessage, state.authMode === "register" ? "正在创建账号…" : "正在登录…");
-    try {
-      if (state.authMode === "register") {
-        if (!username) throw new Error("请填写显示名称");
-        const { data, error } = await state.client.auth.signUp({ email, password, options: { data: { username } } });
-        if (error) throw error;
-        if (!data.session) setMessage(els.authMessage, "账号已创建。请先查收验证邮件，再回来登录。", true);
-        else setMessage(els.authMessage, "账号创建成功，正在进入…", true);
-      } else {
-        const { data, error } = await state.client.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        if (data.session) await enterApp(data.session);
+  event.preventDefault();
+
+  if (!state.client) return;
+
+  const email = els.email.value.trim();
+  const password = els.password.value;
+  const username = els.displayName.value.trim();
+
+  els.authSubmit.disabled = true;
+
+  try {
+    if (state.authMode === "register") {
+
+      if (!username) {
+        throw new Error("请输入显示名称");
       }
-    } catch (error) { setMessage(els.authMessage, error.message || "操作失败，请稍后重试"); }
-    finally { els.authSubmit.disabled = false; }
-  };
+
+      const { data, error } = await state.client.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            username: username
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      setMessage(
+        els.authMessage,
+        "账号创建成功，请登录",
+        true
+      );
+
+    } else {
+
+      const { data, error } =
+        await state.client.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+      if (error) throw error;
+
+      if (data.session) {
+        await enterApp(data.session);
+      }
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    setMessage(
+      els.authMessage,
+      error.message || "操作失败"
+    );
+
+  } finally {
+
+    els.authSubmit.disabled = false;
+
+  }
+};
 
   const sendMessage = async (event) => {
     event.preventDefault();
