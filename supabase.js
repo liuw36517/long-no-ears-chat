@@ -3,11 +3,10 @@ import { createClient } from
 
 
 const supabaseUrl =
-"你的API URL";
-
+"https://mdvrmcodcreyihhqxieb.supabase.co";
 
 const supabaseKey =
-"你的Publishable key";
+"sb_publishable_DszJCaTg2Sh3uMDekdyB_A__HU1QVhZ";
 
 
 export const supabase =
