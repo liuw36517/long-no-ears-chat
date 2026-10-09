@@ -319,3 +319,18 @@
 
   init();
 })();
+
+async function loadMessages(){
+
+const {data,error}=await supabase
+.from("messages")
+.select("*")
+.order("created_at");
+
+if(data){
+ data.forEach(msg=>{
+   renderMessage(msg);
+ });
+}
+
+}
