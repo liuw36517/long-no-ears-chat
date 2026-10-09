@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111f" />
+    <meta name="description" content="龙没有耳朵·通讯：一个部署在 GitHub Pages、由 Supabase 提供数据库与实时消息的静态聊天应用。" />
+    <title>龙没有耳朵 · 通讯</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <main class="page-root">
+      <section id="authScreen" class="auth-screen">
+        <div class="auth-intro">
+          <div class="brand-mark large" aria-hidden="true">龙</div>
+          <p class="eyebrow">PRIVATE COMMUNICATION SPACE</p>
+          <h1>让每一句话<br /><span>都被好好接住。</span></h1>
+          <p class="intro-copy">一个轻量、清爽、支持实时消息的私人聊天空间。账号与消息由 Supabase 数据库保存，网页可以直接部署到 GitHub Pages。</p>
+          <div class="feature-list">
+            <span><i>✓</i> 邮箱账号登录</span>
+            <span><i>✓</i> 实时消息同步</span>
+            <span><i>✓</i> 行级安全策略</span>
+          </div>
+        </div>
+
+        <div class="auth-card glass-card">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">WELCOME BACK</p>
+              <h2 id="authTitle">登录通讯空间</h2>
+            </div>
+            <button id="themeToggleAuth" class="icon-button" type="button" aria-label="切换主题">☼</button>
+          </div>
+
+          <div id="configNotice" class="config-notice hidden">
+            <strong>还差一步配置数据库</strong>
+            <p>请打开 <code>config.js</code>，填入 Supabase Project URL 和 Publishable/anon key，然后刷新页面。</p>
+            <a href="README.md" target="_blank" rel="noreferrer">查看配置说明 →</a>
+          </div>
+
+          <form id="authForm" class="auth-form">
+            <label id="nameField" class="field hidden">
+              <span>显示名称</span>
+              <input id="displayName" type="text" maxlength="32" autocomplete="nickname" placeholder="例如：小龙" />
+            </label>
+            <label class="field">
+              <span>邮箱</span>
+              <input id="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+            </label>
+            <label class="field">
+              <span>密码</span>
+              <input id="password" type="password" minlength="6" autocomplete="current-password" required placeholder="至少 6 位字符" />
+            </label>
+            <button id="authSubmit" class="primary-button full-width" type="submit">登录</button>
+          </form>
+
+          <div class="auth-divider"><span>或者</span></div>
+          <button id="authModeToggle" class="text-button full-width" type="button">没有账号？创建一个</button>
+          <p id="authMessage" class="form-message" role="status"></p>
+        </div>
+      </section>
+
+      <section id="appShell" class="app-shell hidden" aria-label="聊天应用">
+        <aside id="sidebar" class="sidebar glass-card">
+          <div class="sidebar-topbar">
+            <div class="brand-lockup">
+              <div class="brand-mark" aria-hidden="true">龙</div>
+              <div><strong>龙没有耳朵</strong><span>通讯空间</span></div>
+            </div>
+            <button id="themeToggle" class="icon-button" type="button" aria-label="切换主题">☼</button>
+          </div>
+
+          <div class="presence-pill"><span class="presence-dot"></span><span>服务已连接</span></div>
+
+          <div class="sidebar-section-heading"><span>我的会话</span><button id="newRoomButton" class="mini-button" type="button" aria-label="新建会话">＋</button></div>
+          <label class="search-box compact-search"><span aria-hidden="true">⌕</span><input id="roomSearch" type="search" placeholder="搜索会话" autocomplete="off" /></label>
+          <nav id="roomList" class="room-list" aria-label="会话列表"></nav>
+
+          <div class="sidebar-footer">
+            <button id="profileButton" class="profile-card" type="button">
+              <span id="userAvatar" class="avatar avatar-small">龙</span>
+              <span class="profile-copy"><strong id="userName">加载中…</strong><small id="userEmail"> </small></span>
+              <span class="profile-chevron">⋯</span>
+            </button>
+            <button id="logoutButton" class="logout-button" type="button">退出登录</button>
+          </div>
+        </aside>
+
+        <section class="chat-panel">
+          <header class="chat-header glass-card">
+            <button id="mobileSidebarButton" class="icon-button mobile-only" type="button" aria-label="打开会话列表">☰</button>
+            <div class="room-heading">
+              <div id="roomAvatar" class="room-avatar">大</div>
+              <div><h2 id="roomName">大厅</h2><p id="roomDescription">欢迎来到公共聊天空间</p></div>
+            </div>
+            <div class="chat-header-actions">
+              <label class="search-box message-search"><span aria-hidden="true">⌕</span><input id="messageSearch" type="search" placeholder="搜索消息" autocomplete="off" /></label>
+              <button id="roomInfoButton" class="icon-button" type="button" aria-label="会话信息">ⓘ</button>
+            </div>
+          </header>
+
+          <div id="roomInfoPanel" class="room-info-panel glass-card hidden">
+            <div><span class="eyebrow">CURRENT ROOM</span><h3 id="roomInfoName">大厅</h3><p id="roomInfoText">公共会话，登录用户都可以加入并发送消息。</p></div>
+            <button id="closeRoomInfoButton" class="icon-button" type="button" aria-label="关闭会话信息">×</button>
+          </div>
+
+          <div id="messagesViewport" class="messages-viewport">
+            <div id="loadingMessages" class="loading-state"><span class="spinner"></span>正在加载消息…</div>
+            <div id="emptyMessages" class="empty-state hidden"><div class="empty-icon">✦</div><h3>这里还没有消息</h3><p>发送第一句话，让这个空间开始有温度。</p></div>
+            <div id="messagesList" class="messages-list" aria-live="polite"></div>
+          </div>
+
+          <footer class="composer-wrap">
+            <form id="messageForm" class="composer glass-card">
+              <button id="emojiButton" class="composer-icon" type="button" aria-label="添加表情">☺</button>
+              <textarea id="messageInput" rows="1" maxlength="2000" placeholder="写下你的消息…（Enter 发送，Shift + Enter 换行）" aria-label="消息内容"></textarea>
+              <button id="sendButton" class="send-button" type="submit" aria-label="发送消息">↑</button>
+            </form>
+            <div class="composer-meta"><span id="connectionLabel">实时同步已开启</span><span id="characterCount">0 / 2000</span></div>
+          </footer>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="roomDialog" class="modal glass-card">
+      <form id="roomForm" method="dialog">
+        <div class="modal-heading"><div><span class="eyebrow">NEW CONVERSATION</span><h2>创建会话</h2></div><button class="icon-button" value="cancel" type="submit" aria-label="关闭">×</button></div>
+        <label class="field"><span>会话名称</span><input id="roomTitleInput" type="text" maxlength="48" required placeholder="例如：周末计划" /></label>
+        <label class="field"><span>描述（可选）</span><textarea id="roomDescriptionInput" rows="3" maxlength="120" placeholder="这个会话聊什么？"></textarea></label>
+        <p id="roomMessage" class="form-message" role="status"></p>
+        <div class="modal-actions"><button class="secondary-button" value="cancel" type="submit">取消</button><button id="roomSubmit" class="primary-button" value="default" type="submit">创建会话</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="profileDialog" class="modal glass-card">
+      <form id="profileForm" method="dialog">
+        <div class="modal-heading"><div><span class="eyebrow">YOUR PROFILE</span><h2>个人资料</h2></div><button class="icon-button" value="cancel" type="submit" aria-label="关闭">×</button></div>
+        <label class="field"><span>显示名称</span><input id="profileNameInput" type="text" maxlength="32" required /></label>
+        <p class="muted-copy">邮箱：<span id="profileEmailText"></span></p>
+        <p id="profileMessage" class="form-message" role="status"></p>
+        <div class="modal-actions"><button class="secondary-button" value="cancel" type="submit">取消</button><button class="primary-button" value="default" type="submit">保存资料</button></div>
+      </form>
+    </dialog>
+
+    <div id="emojiPicker" class="emoji-picker glass-card hidden" role="dialog" aria-label="表情选择器">
+      <button type="button">😀</button><button type="button">😂</button><button type="button">😍</button><button type="button">🥹</button><button type="button">👍</button><button type="button">🎉</button><button type="button">✨</button><button type="button">🤝</button><button type="button">❤️</button><button type="button">🔥</button>
+    </div>
+    <div id="toast" class="toast" role="status"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
