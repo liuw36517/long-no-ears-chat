@@ -4,7 +4,9 @@
  * 具体获取与数据库建表步骤见 README.md。
  */
 window.CHAT_CONFIG = {
-  supabaseUrl: "https://YOUR_PROJECT.supabase.co",
-  supabaseAnonKey: "YOUR_PUBLISHABLE_OR_ANON_KEY",
+  supabaseUrl: 
+    "https://mdvrmcodcreyihhqxieb.supabase.co",
+  supabaseAnonKey: 
+    "sb_publishable_DszJCaTg2Sh3uMDekdyB_A__HU1QVhZ",
   appName: "龙没有耳朵 · 通讯"
 };
