@@ -128,33 +128,15 @@
       </section>
     </main>
 
-   <label class="field">
-<span>会话名称</span>
-<input 
-id="roomTitleInput" 
-type="text" 
-maxlength="48" 
-required 
-placeholder="例如：周末计划" />
-</label>
-
-<label class="field">
-<span>房间密码（可选）</span>
-<input
-id="roomPasswordInput"
-type="password"
-maxlength="32"
-placeholder="设置进入密码" />
-</label>
-
-<label class="field">
-<span>描述（可选）</span>
-<textarea 
-id="roomDescriptionInput" 
-rows="3" 
-maxlength="120"
-placeholder="这个会话聊什么？"></textarea>
-  </label>
+    <dialog id="roomDialog" class="modal glass-card">
+      <form id="roomForm" method="dialog">
+        <div class="modal-heading"><div><span class="eyebrow">NEW CONVERSATION</span><h2>创建会话</h2></div><button class="icon-button" value="cancel" type="submit" aria-label="关闭">×</button></div>
+        <label class="field"><span>会话名称</span><input id="roomTitleInput" type="text" maxlength="48" required placeholder="例如：周末计划" /></label>
+        <label class="field"><span>描述（可选）</span><textarea id="roomDescriptionInput" rows="3" maxlength="120" placeholder="这个会话聊什么？"></textarea></label>
+        <p id="roomMessage" class="form-message" role="status"></p>
+        <div class="modal-actions"><button class="secondary-button" value="cancel" type="submit">取消</button><button id="roomSubmit" class="primary-button" value="default" type="submit">创建会话</button></div>
+      </form>
+    </dialog>
 
     <dialog id="profileDialog" class="modal glass-card">
       <form id="profileForm" method="dialog">
